@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>stylized-to-do-list</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="contanier">
+      <h1 class="title">To-Do List App</h1>
+      <div class="task-input">
+        <div>
+          <button id="delete-all">Delete All</button>
+          <button id="add-task">Add Task</button>
+        </div>
+        <div class="filter">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="complete">Completed</button>
+          <button class="filter-btn" data-filter="not-complete">
+            Not Complete
+          </button>
+        </div>
+      </div>
+      <ul id="tasks" class="tasks">
+        <h1 class="no-tasks">There is no task, yet</h1>
+      </ul>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

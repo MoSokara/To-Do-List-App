@@ -1,0 +1,559 @@
+/* ============================================
+   TO-DO LIST — Improved Design System
+   Design: Refined Utilitarian / Clean Modern
+   ============================================ */
+
+/* --- CSS Variables (Design Tokens) --- */
+:root {
+    /* Color Palette */
+    --clr-bg: #eef1f6;
+    --clr-surface: #ffffff;
+    --clr-border: #1e2d3d;
+    --clr-border-light: #d0d7e3;
+
+    --clr-primary: #1e2d3d;
+    /* Deep navy */
+    --clr-primary-mid: #2c4257;
+    /* Slightly lighter for hover states */
+    --clr-accent: #f59e0b;
+    /* Warm amber — replaces harsh orange */
+    --clr-accent-dark: #d97706;
+    --clr-danger: #ef4444;
+    --clr-danger-dark: #dc2626;
+    --clr-info: #3b82f6;
+    --clr-info-dark: #2563eb;
+    --clr-success: #22c55e;
+
+    /* Text */
+    --clr-text: #1e2d3d;
+    --clr-text-muted: #6b7a8d;
+    --clr-text-inverse: #ffffff;
+
+    /* Task Cards */
+    --clr-task-pending-bg: #dbeafe;
+    --clr-task-pending-border: #3b82f6;
+    --clr-task-done-bg: #dcfce7;
+    --clr-task-done-border: #22c55e;
+
+    /* Spacing Scale */
+    --sp-xs: 4px;
+    --sp-sm: 8px;
+    --sp-md: 14px;
+    --sp-lg: 20px;
+    --sp-xl: 28px;
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, .10), 0 2px 6px rgba(0, 0, 0, .07);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, .14), 0 4px 12px rgba(0, 0, 0, .08);
+
+    /* Transitions */
+    --transition: 160ms ease;
+}
+
+/* --- Reset --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--clr-border-light);
+    border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--clr-text-muted);
+}
+
+/* --- Base --- */
+body {
+    background-color: var(--clr-bg);
+    padding: var(--sp-lg);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--clr-text);
+}
+
+/* --- App Container --- */
+.contanier {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--clr-surface);
+    border: 3px solid var(--clr-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    height: calc(100vh - 40px);
+    margin: auto;
+    padding: var(--sp-xl);
+    overflow: hidden;
+}
+
+/* --- Title --- */
+.title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--clr-primary);
+    text-align: center;
+    margin-bottom: var(--sp-lg);
+    position: relative;
+    padding-bottom: var(--sp-md);
+}
+
+.title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 3px;
+    background: var(--clr-accent);
+    border-radius: 99px;
+}
+
+/* --- Empty State --- */
+.no-tasks {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--clr-text-muted);
+    text-align: center;
+    padding: var(--sp-xl) 0;
+}
+
+/* --- Task Input Bar --- */
+.task-input {
+    padding: var(--sp-md);
+    background-color: var(--clr-bg);
+    border: 2px solid var(--clr-border-light);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-sm);
+}
+
+.task-input div:first-of-type {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-sm);
+    width: 100%;
+}
+
+/* --- Filter Buttons --- */
+.filter {
+    display: flex;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 2px solid var(--clr-border-light);
+}
+
+.filter button {
+    flex: 1;
+    background-color: var(--clr-surface);
+    padding: var(--sp-xs) var(--sp-sm);
+    border: none;
+    border-right: 1px solid var(--clr-border-light);
+    color: var(--clr-text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+.filter button:last-of-type {
+    border-right: none;
+}
+
+.filter .active {
+    background-color: var(--clr-primary);
+    color: var(--clr-text-inverse);
+}
+
+.filter button:not(.active):hover {
+    background-color: var(--clr-bg);
+    color: var(--clr-text);
+}
+
+/* --- Focus Ring (Accessibility) --- */
+.filter button:focus-visible,
+#add-task:focus-visible,
+#delete-all:focus-visible,
+.task button:focus-visible,
+.bobup input:focus-visible,
+#add:focus-visible,
+#cancel:focus-visible,
+#no:focus-visible,
+#yes:focus-visible,
+#confirm:focus-visible {
+    outline: 3px solid var(--clr-accent);
+    outline-offset: 2px;
+}
+
+/* --- Action Buttons (Add / Delete All) --- */
+#add-task,
+#delete-all {
+    flex: 1;
+    padding: var(--sp-sm) var(--sp-md);
+    border: 2px solid;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+#add-task:active,
+#delete-all:active {
+    transform: translateY(1px);
+}
+
+#add-task {
+    background: var(--clr-accent);
+    border-color: var(--clr-accent-dark);
+    color: var(--clr-text-inverse);
+    box-shadow: 0 2px 6px rgba(245, 158, 11, .30);
+}
+
+#add-task:hover {
+    background: var(--clr-accent-dark);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, .40);
+}
+
+#delete-all {
+    background: transparent;
+    color: var(--clr-danger);
+    border-color: var(--clr-danger);
+}
+
+#delete-all:hover {
+    background: var(--clr-danger);
+    color: var(--clr-text-inverse);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, .30);
+}
+
+/* --- Task List --- */
+.tasks {
+    list-style: none;
+    margin-top: var(--sp-lg);
+    padding: 0;
+    padding-right: var(--sp-xs);
+    /* breathing room for scrollbar */
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-md);
+    overflow-y: auto;
+}
+
+/* --- Individual Task Card --- */
+.task.not-complete,
+.task.complete {
+    font-size: 1rem;
+    padding: var(--sp-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-sm);
+    border-radius: var(--radius-md);
+    border-left: 4px solid;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.task.not-complete:hover,
+.task.complete:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.task.not-complete {
+    border-color: var(--clr-task-pending-border);
+    background-color: var(--clr-task-pending-bg);
+}
+
+.task.complete {
+    border-color: var(--clr-task-done-border);
+    background-color: var(--clr-task-done-bg);
+}
+
+/* --- Task Title --- */
+#task-title {
+    color: var(--clr-text);
+    font-weight: 600;
+    font-size: 0.95rem;
+    align-self: flex-start;
+    line-height: 1.4;
+}
+
+/* --- Task Action Row --- */
+.task div {
+    align-self: flex-end;
+    display: flex;
+    gap: var(--sp-xs);
+}
+
+/* --- Task Inline Buttons --- */
+.task button {
+    padding: var(--sp-xs) var(--sp-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--clr-text-inverse);
+    cursor: pointer;
+    transition: background-color var(--transition), transform var(--transition);
+}
+
+.task button:active {
+    transform: scale(0.97);
+}
+
+.task #edit {
+    background-color: var(--clr-accent);
+}
+
+.task #edit:hover {
+    background-color: var(--clr-accent-dark);
+}
+
+.task #delete {
+    background-color: var(--clr-danger);
+}
+
+.task #delete:hover {
+    background-color: var(--clr-danger-dark);
+}
+
+.task #is-complete {
+    background-color: var(--clr-info);
+}
+
+.task #is-complete:hover {
+    background-color: var(--clr-info-dark);
+}
+
+/* ============================================
+   POPUP / MODAL
+   ============================================ */
+
+.bobup-container {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.bobup-container .overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(15, 23, 36, 0.55);
+    backdrop-filter: blur(3px);
+    z-index: 100;
+}
+
+.bobup {
+    position: relative;
+    min-width: 360px;
+    max-width: 90vw;
+    background-color: var(--clr-primary);
+    border: 2px solid rgba(255, 255, 255, .15);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-lg);
+    padding-top: 0;
+    color: var(--clr-text-inverse);
+    text-align: center;
+    z-index: 101;
+    box-shadow: var(--shadow-lg);
+}
+
+/* --- Popup Header --- */
+.bobup-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: var(--sp-md) 0;
+    margin-bottom: var(--sp-md);
+    position: relative;
+    line-height: 1;
+    letter-spacing: 0.3px;
+}
+
+.bobup-title::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, .18);
+    border-radius: 1px;
+}
+
+/* --- Popup Text --- */
+.question {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: var(--sp-xs);
+}
+
+.note {
+    color: var(--clr-accent);
+    font-size: 0.85rem;
+}
+
+.warning {
+    color: var(--clr-accent);
+    display: block;
+    font-size: 0.82rem;
+    margin-top: var(--sp-xs);
+}
+
+.danger {
+    color: #fc8181;
+}
+
+.error {
+    color: var(--clr-text-inverse);
+    background-color: var(--clr-danger);
+    padding: var(--sp-sm) var(--sp-md);
+    border-radius: var(--radius-sm);
+    display: none;
+    margin-top: var(--sp-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* --- Popup Input --- */
+.bobup input {
+    width: 100%;
+    height: 38px;
+    margin: var(--sp-sm) 0;
+    padding: 0 var(--sp-sm);
+    border: 2px solid rgba(255, 255, 255, .20);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, .10);
+    color: var(--clr-text-inverse);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color var(--transition), background var(--transition);
+}
+
+.bobup input::placeholder {
+    color: rgba(255, 255, 255, .40);
+}
+
+.bobup input:focus {
+    border-color: var(--clr-accent);
+    background: rgba(255, 255, 255, .14);
+}
+
+/* --- Popup Button Row --- */
+.bobup>div {
+    display: flex;
+    margin-top: var(--sp-md);
+    gap: var(--sp-sm);
+}
+
+/* --- Popup Buttons --- */
+#cancel,
+#no {
+    flex: 1;
+    padding: var(--sp-sm) var(--sp-md);
+    border: 2px solid rgba(255, 255, 255, .25);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, .10);
+    color: var(--clr-text-inverse);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+#cancel:hover,
+#no:hover {
+    background: rgba(255, 255, 255, .20);
+}
+
+#add,
+#confirm {
+    flex: 1;
+    padding: var(--sp-sm) var(--sp-md);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--clr-accent);
+    color: var(--clr-text-inverse);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--transition), box-shadow var(--transition);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, .35);
+}
+
+#add:hover,
+#confirm:hover {
+    background: var(--clr-accent-dark);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, .45);
+}
+
+#yes {
+    flex: 1;
+    padding: var(--sp-sm) var(--sp-md);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--clr-danger);
+    color: var(--clr-text-inverse);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--transition), box-shadow var(--transition);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, .30);
+}
+
+#yes:hover {
+    background: var(--clr-danger-dark);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, .40);
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+    .contanier {
+        padding: var(--sp-md);
+        border-radius: var(--radius-md);
+        height: calc(100vh - 24px);
+    }
+
+    .title {
+        font-size: 1.6rem;
+    }
+
+    .bobup {
+        min-width: 0;
+        width: calc(100vw - 32px);
+    }
+
+    #add-task,
+    #delete-all {
+        font-size: 0.78rem;
+        padding: var(--sp-sm);
+    }
+}
